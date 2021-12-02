@@ -1,6 +1,7 @@
 import douyu
 import idm
 import transcode
+import config
 import datetime
 
 
@@ -8,12 +9,12 @@ def main():
     room_id = input('Type room id(douyu.com): \n')
     dur = input('Set downloading/recording duration(in sec): \n')
     dur = int(dur)
-    idm.timeout = dur
+    config.duration = dur
     s = douyu.DouYu(room_id)
     url = s.get_real_url()['flv']
     dest = '../download/'
     filename = \
-        dest + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M_') + 'DouYu_'\
+        dest + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M_') + 'DouYu_' \
         + \
         str(room_id)
     filename_before = filename + '.flv'
@@ -21,7 +22,7 @@ def main():
     dm = idm.download_wrapper(url, filename_before)
     try:
         print('Start downloading/recording... Duration set to: ' + str(
-            idm.timeout) + 's')
+            config.duration) + 's')
         dm.download()
     except KeyboardInterrupt:
         print('Download Completed')
