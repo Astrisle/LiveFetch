@@ -7,11 +7,13 @@ import multiprocessing
 import time
 
 
-@timer.exit_after(10)
-def download_test(url: str):
-    dl.urlretrieve(url, '../download/test.flv')
+class download_wrapper:
 
+    def __init__(self, dl_timeout: int, resource_url: str, dest: str):
+        self.resource_url = resource_url
+        self.dest = dest
+        self.timeout = dl_timeout
 
-if __name__ == '__main__':
-    url = 'http://dyscdnali1.douyucdn.cn/live/288016rlols5.flv?uuid='
-    download_test(url)
+    @timer.exit_after()
+    def download(self):
+        dl.urlretrieve(self.resource_url, self.dest)
