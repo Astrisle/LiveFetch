@@ -1,19 +1,16 @@
-import comtypes.client as cc
-import comtypes
-import logging
-import timer
 import urllib.request as dl
-import multiprocessing
-import time
+
+import timer
+
+timeout = 10
 
 
 class download_wrapper:
 
-    def __init__(self, dl_timeout: int, resource_url: str, dest: str):
+    def __init__(self, resource_url: str, dest: str):
         self.resource_url = resource_url
         self.dest = dest
-        self.timeout = dl_timeout
 
-    @timer.exit_after()
+    @timer.exit_after(timeout)
     def download(self):
         dl.urlretrieve(self.resource_url, self.dest)
