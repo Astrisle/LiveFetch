@@ -25,12 +25,13 @@ except NameError:
 
 def cdquit(fn_name):
     # print to stderr, unbuffered in Python 2.
-    print('{0} took too long'.format(fn_name), file=sys.stderr)
+    print('Function: {0} has reached time limit'.format(fn_name),
+          file=sys.stderr)
     sys.stderr.flush()  # Python 3 stderr is likely buffered.
     thread.interrupt_main()  # raises KeyboardInterrupt
 
 
-def exit_after(s):
+def exit_after(s: int = 7500):
     '''
     use as decorator to exit process if
     function takes longer than s seconds
