@@ -7,9 +7,11 @@ import datetime
 
 def main():
     room_id = input('Type room id(douyu.com): \n')
-    dur = input('Set downloading/recording duration(in sec): \n')
-    dur = int(dur)
-    config.duration = dur
+    # immutable causing trouble
+    # dur = input('Set downloading/recording duration(in sec): \n')
+    # dur = int(dur)
+    # config = __import__('config')
+    # config.duration = dur
     s = douyu.DouYu(room_id)
     url = s.get_real_url()['flv']
     dest = '../download/'
