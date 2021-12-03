@@ -3,6 +3,7 @@ import downloader
 import transcoder
 import config
 import datetime
+import os
 
 import logging
 
@@ -23,8 +24,7 @@ def main():
     logging.info('Resolved stream source url: ' + url)
     filename = \
         dest + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M_') + 'DouYu_' \
-        + \
-        str(room_id)
+        + str(room_id)
     filename_before = filename + '.flv'
     filename_after = filename + '.mp4'
     logging.info('File path: ' + filename_before)
@@ -38,6 +38,10 @@ def main():
         me = transcoder.TranscoderWrapper(filename_before, filename_after)
         me.transcode()
         logging.info('Transcoded file path: ' + filename_after)
+        if config.auto_shutdown:
+            os.system('shutdown -s')
+        else:
+            pass
 
 
 if __name__ == '__main__':
