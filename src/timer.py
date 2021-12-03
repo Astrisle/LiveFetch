@@ -25,7 +25,7 @@ except NameError:
 
 def cdquit(fn_name):
     # print to stderr, unbuffered in Python 2.
-    print('Function: {0} has reached time limit'.format(fn_name),
+    print('[Timer] Function: {0} has reached time limit'.format(fn_name),
           file=sys.stderr)
     sys.stderr.flush()  # Python 3 stderr is likely buffered.
     thread.interrupt_main()  # raises KeyboardInterrupt

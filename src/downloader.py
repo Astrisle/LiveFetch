@@ -4,7 +4,7 @@ import timer
 import config
 
 
-class download_wrapper:
+class DownloaderWrapper:
 
     def __init__(self, resource_url: str, dest: str):
         self.resource_url = resource_url

@@ -1,7 +1,7 @@
 from ffmpy import FFmpeg
 
 
-class transcode_wrapper:
+class TranscoderWrapper:
 
     def __init__(self, source_dir: str, dest_dir: str):
         self.source = source_dir
