@@ -37,7 +37,7 @@ class DouYu:
         if result:
             self.rid = result.group(1)
         else:
-            raise Exception('房间号错误')
+            raise RuntimeError('房间号错误')
 
     @staticmethod
     def md5(data):
@@ -128,9 +128,9 @@ class DouYu:
         if error == 0:
             pass
         elif error == 102:
-            raise Exception('房间不存在')
+            raise RuntimeError('房间不存在')
         elif error == 104:
-            raise Exception('房间未开播')
+            raise RuntimeError('房间未开播')
         else:
             key = self.get_js()
         real_url = {

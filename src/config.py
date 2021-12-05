@@ -6,7 +6,7 @@ auto_shutdown = True
 
 resolve_retry_timeout = 15
 
-download_retry_timeout = 30
+download_retry_timeout = 15
 
 # class dl_config(object):
 #     def __init__(self):

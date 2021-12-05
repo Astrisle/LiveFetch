@@ -1,5 +1,8 @@
 import urllib.request as dl
 
+import config
+import timer
+
 
 class DownloaderWrapper:
 
@@ -7,5 +10,6 @@ class DownloaderWrapper:
         self.resource_url = resource_url
         self.dest = dest
 
+    @timer.exit_after(config.duration)
     def download(self):
         dl.urlretrieve(self.resource_url, self.dest)

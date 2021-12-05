@@ -16,14 +16,14 @@ logging.basicConfig(level=logging.INFO)
 
 
 def resolve_fail_handler(detail):
-    logging.warning('Resolve attempts: {tries}'.format(**detail))
-    logging.warning('Stream have not started of RID not valid, retry in '
+    logging.warning('Attempts: {tries}'.format(**detail))
+    logging.warning('Stream not started or RID not valid, retry in '
                     'around ' +
                     str(config.resolve_retry_timeout) + ' sec...')
 
 
 def download_fail_handler(detail):
-    logging.warning('Download attempts: {tries}'.format(**detail))
+    logging.warning('Attempts: {tries}'.format(**detail))
     logging.warning('Failed retrieving file from resolved url, restarting '
                     'sequence in around ' + str(config.download_retry_timeout) +
                     ' sec...')
@@ -36,7 +36,7 @@ def download_fail_handler(detail):
                       interval=config.download_retry_timeout
                       )
 @backoff.on_exception(backoff.constant,
-                      Exception,
+                      RuntimeError,
                       jitter=backoff.random_jitter,
                       on_backoff=resolve_fail_handler,
                       interval=config.resolve_retry_timeout
@@ -53,7 +53,7 @@ def resolve_and_download(rid: str, filepath: str):
 
 
 def main():
-    room_id = input('Type room id here(douyu.com): \n')
+    room_id = input('Type room id then press Enter(douyu.com): \n')
     logging.info('Initialising task sequence...')
     dest = '../download/'
     filename = \
@@ -64,7 +64,8 @@ def main():
     try:
         resolve_and_download(room_id, filename_before)
     except KeyboardInterrupt:
-        logging.info('Download Completed... Starting ffmpeg for transcode')
+        logging.info('Download sequence completed... Starting ffmpeg for '
+                     'transcode')
         me = transcoder.TranscoderWrapper(filename_before, filename_after)
         me.transcode()
         logging.info('Transcoded file path: ' + filename_after)
