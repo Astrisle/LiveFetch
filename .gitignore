@@ -215,3 +215,5 @@ cython_debug/
 matlab/
 
 download/
+
+utils/test_text
