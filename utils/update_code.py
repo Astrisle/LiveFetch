@@ -6,20 +6,35 @@ import threading
 
 
 def get_gift_codes():
+    cash_gift_dict = {}
     gift_dict = {}
     gift_effects_dict = {}
+
+    cash_gift_json = requests.get(
+        'https://open.douyucdn.cn/api/RoomApi/room/520').text
     gift_effects_json = requests.get(
         'https://webconf.douyucdn.cn/resource/common/gift/flash'
         '/gift_effect.json').text
     gift_json = requests.get(
         'https://webconf.douyucdn.cn/resource/common/prop_gift_list'
         '/prop_gift_config.json').text
+
     gift_effects_json = gift_effects_json.replace('DYConfigCallback(', '')[0:-2]
     gift_json = gift_json.replace('DYConfigCallback(', '')[0:-2]
+    cash_gift_json = json.loads(cash_gift_json)['data']['gift']
     gift_effects_json = json.loads(gift_effects_json)['data']['flashConfig']
     gift_json = json.loads(gift_json)['data']
 
     # reformat
+    # without json.replace this object is a list
+    for i in range(len(cash_gift_json)):
+        cash_gift_dict[str(cash_gift_json[i]['id'])] = {
+            'code': cash_gift_json[i]['id'],
+            'name': cash_gift_json[i]['name'],
+            'exp': cash_gift_json[i]['gx'],
+            'effect_code': 0
+        }
+
     for gift in gift_effects_json:
         gift_effects_dict[gift] = {
             'effect_code': gift,
@@ -34,16 +49,19 @@ def get_gift_codes():
             'effect_code': gift_json[gift]['effect'],
         }
 
+    # merge two gift dicts
+    gift_all_dict = cash_gift_dict | gift_dict
+
     # compare if name from props dict vary from effects
     # TODO - validate if this step is necessary
     res = {}
     res_vary = {}
 
-    for gift in gift_dict:
-        code = gift_dict[gift]['code']
-        name = gift_dict[gift]['name']
-        exp = gift_dict[gift]['exp']
-        code_effect = gift_dict[gift]['effect_code']
+    for gift in gift_all_dict:
+        code = gift_all_dict[gift]['code']
+        name = gift_all_dict[gift]['name']
+        exp = gift_all_dict[gift]['exp']
+        code_effect = gift_all_dict[gift]['effect_code']
         if code_effect != 0:
             name_from_effect = gift_effects_dict[str(code_effect)][
                 'effect_name']
@@ -116,9 +134,7 @@ def construct_config_file(res: tuple, path: str):
                 del original[gift]
                 del fetched_gifts[gift]
 
-
-
-
+    # if len(conflict) == 0:
 
     print('test')
 
