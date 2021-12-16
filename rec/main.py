@@ -74,6 +74,11 @@ def main():
         else:
             pass
 
+    if config.auto_shutdown:
+        os.system('shutdown -s')
+    else:
+        pass
+
 
 if __name__ == '__main__':
     main()
