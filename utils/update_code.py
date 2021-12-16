@@ -165,9 +165,10 @@ def construct_config_file(res: dict, path: str):
             file.write(singe_str + '\n')
 
         info_str = '成功导入了 ' + str(len(res)) + ' 条云端数据\n' + str(
-            len(remote_missing)) + ' 条数据于本地存在而云端不存在, 保留本地数据\n' +\
+            len(remote_missing)) + ' 条数据于本地存在而云端不存在, 将保留本地数据\n' +\
             '本地与云端冲突数据共 ' + str(len(conflict) + len(del_index)) + \
-            ' 条, 冲突项(如有)已由云端数据覆盖\n' + '目前总计存在 ' + str(len(res_final)) + ' 条数据'
+            ' 条, 冲突项(如有)已由云端数据覆盖\n' + '目前总计存在 ' \
+            + str(len(res_final)) + ' 条数据'
 
         ctypes.windll.user32.MessageBoxW(0, info_str, '导入成功', 0)
 
@@ -179,5 +180,11 @@ if __name__ == '__main__':
     try:
         construct_config_file(get_gift_codes(), str(par) + '\\giftConfig.dat')
     except Exception as e:
-        err_str = str(e) + '\n\n请尽快反馈以上错误信息给开发者'
-        ctypes.windll.user32.MessageBoxW(0, err_str, '出现异常', 0)
+        if e.__class__.__name__ == 'FileNotFoundError':
+            err_str_file = '没有找到配置文件\n' \
+                           '请确保 update_code 文件夹正确放置在插件文件夹内\n' \
+                           '如不清楚请参阅使用说明'
+            ctypes.windll.user32.MessageBoxW(0, err_str_file, '未找到配置文件', 0)
+        else:
+            err_str = str(e) + '\n\n请尽快反馈以上错误信息给开发者'
+            ctypes.windll.user32.MessageBoxW(0, err_str, '出现未知异常', 0)
