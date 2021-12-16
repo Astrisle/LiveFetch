@@ -176,8 +176,11 @@ def construct_config_file(res: dict, path: str):
 
 
 if __name__ == '__main__':
+    dir_path = os.path.realpath(__file__)
+    cf_path = Path(dir_path)
+    par = cf_path.parent.parent.absolute()
     try:
-        construct_config_file(get_gift_codes(), '../giftConfig.dat')
+        construct_config_file(get_gift_codes(), str(par) + '\\giftConfig.dat')
     except Exception as e:
         os.system('msg %username% 导入过程中出现异常,请截图反馈')
         logging.error(e)
