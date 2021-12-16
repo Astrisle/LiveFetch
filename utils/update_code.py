@@ -46,7 +46,7 @@ def get_gift_codes():
         gift_dict[gift] = {
             'code': gift,
             'name': gift_json[gift]['name'],
-            'exp': gift_json[gift]['exp'],
+            'exp': gift_json[gift]['devote'],
             'effect_code': gift_json[gift]['effect'],
         }
 
