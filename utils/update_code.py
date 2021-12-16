@@ -1,10 +1,9 @@
+import ctypes
 import json
 import os
-import time
+from pathlib import Path
 
 import requests
-import logging
-from pathlib import Path
 
 
 def get_gift_codes():
@@ -164,15 +163,13 @@ def construct_config_file(res: dict, path: str):
                         + ',' \
                         + str(res_final[gift]['exp'])
             file.write(singe_str + '\n')
-        os.system('msg %username% 成功导入了'
-                  + str(len(res)) + '条云端数据; '
-                  + str(len(remote_missing))
-                  + '条数据于本地存在而云端不存在, 保留本地数据; '
-                  + '本地与云端冲突数据共'
-                  + str(len(conflict) + len(del_index)) + '条, '
-                    '已由云端数据覆盖; '
-                  + '目前总计存在'
-                  + str(len(res_final)) + '条数据')
+
+        info_str = '成功导入了 ' + str(len(res)) + ' 条云端数据\n' + str(
+            len(remote_missing)) + ' 条数据于本地存在而云端不存在, 保留本地数据\n' +\
+            '本地与云端冲突数据共 ' + str(len(conflict) + len(del_index)) + \
+            ' 条, 冲突项(如有)已由云端数据覆盖\n' + '目前总计存在 ' + str(len(res_final)) + ' 条数据'
+
+        ctypes.windll.user32.MessageBoxW(0, info_str, '导入成功', 0)
 
 
 if __name__ == '__main__':
@@ -182,6 +179,5 @@ if __name__ == '__main__':
     try:
         construct_config_file(get_gift_codes(), str(par) + '\\giftConfig.dat')
     except Exception as e:
-        os.system('msg %username% 导入过程中出现异常,请截图反馈')
-        logging.error(e)
-        os.system('timeout /t -1')
+        err_str = str(e) + '\n\n请尽快反馈以上错误信息给开发者'
+        ctypes.windll.user32.MessageBoxW(0, err_str, '出现异常', 0)
