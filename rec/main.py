@@ -43,7 +43,8 @@ def download_fail_handler(detail):
                       )
 def resolve_and_download(rid: str, filepath: str):
     s = douyu.DouYu(rid)
-    url = s.get_real_url()['flv']
+    url = s.get_real_url()['x-p2p']
+    logging.info('Current time - ' + datetime.datetime.now().strftime('%H:%M:%S'))
     logging.info('Resolved stream source url: ' + url)
     dm = downloader.DownloaderWrapper(url, filepath)
     logging.info('File path: ' + filepath)
@@ -53,9 +54,11 @@ def resolve_and_download(rid: str, filepath: str):
 
 
 def main():
-    room_id = input('Type room id then press Enter(douyu.com): \n')
+    # room_id = input('Type room id then press Enter(douyu.com): \n')
+    room_id = 520
+    processed = False
     logging.info('Initialising task sequence...')
-    dest = '../download/'
+    dest = '../recordings/'
     filename = \
         dest + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M_') + 'DouYu_' \
         + str(room_id)
@@ -69,15 +72,23 @@ def main():
         me = transcoder.TranscoderWrapper(filename_before, filename_after)
         me.transcode()
         logging.info('Transcoded file path: ' + filename_after)
+        processed = True
         if config.auto_shutdown:
             os.system('shutdown -s')
         else:
             pass
 
-    if config.auto_shutdown:
-        os.system('shutdown -s')
-    else:
-        pass
+    if processed == False:
+        logging.info('Download sequence completed... Starting ffmpeg for '
+                     'transcode')
+        me = transcoder.TranscoderWrapper(filename_before, filename_after)
+        me.transcode()
+        logging.info('Transcoded file path: ' + filename_after)
+        processed = True
+        if config.auto_shutdown:
+            os.system('shutdown -s')
+        else:
+            pass
 
 
 if __name__ == '__main__':

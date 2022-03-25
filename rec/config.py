@@ -1,8 +1,8 @@
 # Recoding Duration / 录制时长
-duration = 7800
+duration = 99999
 
 # Shutdown PC after recording & transcoding complete / 完成后自动关机
-auto_shutdown = True
+auto_shutdown = False
 
 # Retry timeout for source url resolve / 解析视频源地址失败重试等待时间
 resolve_retry_timeout = 15

@@ -6,6 +6,7 @@ from pathlib import Path
 import requests
 
 
+
 def get_gift_codes():
     cash_gift_dict = {}
     gift_dict = {}
@@ -14,8 +15,7 @@ def get_gift_codes():
     cash_gift_json = requests.get(
         'https://open.douyucdn.cn/api/RoomApi/room/520').text
     # gift_effects_json = requests.get(
-    #     'https://webconf.douyucdn.cn/resource/common/gift/flash'
-    #     '/gift_effect.json').text
+    #     'https://webconf.douyucdn.cn/resource/common/gift/flash/gift_effect.json').text
     gift_json = requests.get(
         'https://webconf.douyucdn.cn/resource/common/prop_gift_list'
         '/prop_gift_config.json').text
@@ -155,6 +155,14 @@ def construct_config_file(res: dict, path: str):
 
     res_final = res | remote_missing
 
+    del_index1 = []
+    for gift in res_final:
+        if '荧光棒' in res_final[gift]['name']:
+            del_index1.append(gift)
+
+    for i in del_index1:
+        del res_final[i]
+
     # write data and display stats
     with open(path, 'w') as file:
         for gift in res_final:
@@ -164,11 +172,13 @@ def construct_config_file(res: dict, path: str):
                         + str(res_final[gift]['exp'])
             file.write(singe_str + '\n')
 
-        info_str = '成功导入了 ' + str(len(res)) + ' 条云端数据\n' + str(
-            len(remote_missing)) + ' 条数据于本地存在而云端不存在, 将保留本地数据\n' +\
-            '本地与云端冲突数据共 ' + str(len(conflict) + len(del_index)) + \
-            ' 条, 冲突项(如有)已由云端数据覆盖\n' + '目前总计存在 ' \
-            + str(len(res_final)) + ' 条数据'
+        info_str = '成功导入了 ' + str(len(res)) + ' 项云端数据\n' + str(
+            len(remote_missing)) + ' 项数据于本地存在而云端不存在, 将保留本地数据\n' + \
+                   '本地与云端冲突数据共 ' + str(len(conflict) + len(del_index)) + \
+                   ' 项, 冲突项(如有)已由云端数据覆盖\n' \
+                   + '荧光棒相关数据共 ' + str(len(del_index1)) + ' 项, 已移除\n目前总计存在 ' \
+                   + str(len(res_final)) + ' 项数据\n\n' \
+                   + '*冲突数据指: 两端数据中相同代码不同名字/相同名字不同代码的礼物'
 
         ctypes.windll.user32.MessageBoxW(0, info_str, '导入成功', 0)
 
@@ -184,7 +194,8 @@ if __name__ == '__main__':
             err_str_file = '没有找到配置文件\n' \
                            '请确保 update_code 文件夹正确放置在插件文件夹内\n' \
                            '如不清楚请参阅使用说明'
-            ctypes.windll.user32.MessageBoxW(0, err_str_file, '未找到配置文件', 0)
+            ctypes.windll.user32.MessageBoxW(0, err_str_file,
+                                             '未找到配置文件', 0)
         else:
             err_str = str(e) + '\n\n请尽快反馈以上错误信息给开发者'
             ctypes.windll.user32.MessageBoxW(0, err_str, '出现未知异常', 0)

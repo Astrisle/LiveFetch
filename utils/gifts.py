@@ -137,71 +137,24 @@ class DyDanmu:
             print(str(e))
 
     def get_gift_dict(self):
-        gift_dict = {}
-        gift_effect_dict = {}
-        gift_json1 = requests.get(
-            'https://webconf.douyucdn.cn/resource/common/gift/flash'
-            '/gift_effect.json').text
+        gift_json = {}
+        gift_json1 = requests.get('https://webconf.douyucdn.cn/resource/common/gift/flash/gift_effect.json').text
         gift_json2 = requests.get(
-            'https://webconf.douyucdn.cn/resource/common/prop_gift_list'
-            '/prop_gift_config.json').text
+            'https://webconf.douyucdn.cn/resource/common/prop_gift_list/prop_gift_config.json').text
         gift_json1 = gift_json1.replace('DYConfigCallback(', '')[0:-2]
         gift_json2 = gift_json2.replace('DYConfigCallback(', '')[0:-2]
         gift_json1 = json.loads(gift_json1)['data']['flashConfig']
         gift_json2 = json.loads(gift_json2)['data']
-
         for gift in gift_json1:
-            gift_effect_dict[gift] = {
-                'effect_code': gift,
-                'effect_name': gift_json1[gift]['name']
-            }
-
+            gift_json[gift] = gift_json1[gift]['name']
         for gift in gift_json2:
-            gift_dict[gift] = {
-                'code': gift,
-                'name': gift_json2[gift]['name'],
-                'exp': gift_json2[gift]['exp'],
-                'effect_code': gift_json2[gift]['effect'],
-            }
+            gift_json[gift] = gift_json2[gift]['name']
+        return gift_json
 
-        # compare if name from props dict vary from effects
-
-        res = {}
-        res_vary = {}
-
-        for gift in gift_dict:
-            code = gift_dict[gift]['code']
-            name = gift_dict[gift]['name']
-            exp = gift_dict[gift]['exp']
-            code_effect = gift_dict[gift]['effect_code']
-            if code_effect != 0:
-                name_from_effect = gift_effect_dict[str(code_effect)][
-                    'effect_name']
-            else:
-                name_from_effect = 'No Effects'
-
-            if name == name_from_effect or name_from_effect == 'No Effects':
-                res[gift] = {
-                    'code': code,
-                    'name': name,
-                    'exp': exp,
-                    'effect_code': code_effect,
-                    'effect_name': name_from_effect
-                }
-            else:
-                res_vary[gift] = {
-                    'code': code,
-                    'name': name,
-                    'exp': exp,
-                    'effect_code': code_effect,
-                    'effect_name': name_from_effect
-                }
-
-        return gift_dict, gift_effect_dict
 
 
 if __name__ == '__main__':
     roomid = '520'
     url = 'wss://danmuproxy.douyu.com:8506/'
     dy = DyDanmu(roomid, url)
-    dy.get_gift_dict()
+    dy.start()

@@ -50,6 +50,12 @@ cmake-build-*/
 # IntelliJ
 out/
 
+#VSCode
+.vscode
+
+#Test data
+giftConfig.dat
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
@@ -214,6 +220,6 @@ cython_debug/
 # Matlab Source
 matlab/
 
-download/
+recordings/
 
 utils/test_text

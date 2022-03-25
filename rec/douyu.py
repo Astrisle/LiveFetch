@@ -91,7 +91,7 @@ class DouYu:
 
         return key
 
-    def get_pc_js(self, cdn='ali-h5', rate=0):
+    def get_pc_js(self, cdn='ws-h5', rate=0):
         """
         通过PC网页端的接口获取完整直播源。
         :param cdn: 主线路ws-h5、备用线路tct-h5
@@ -144,4 +144,5 @@ class DouYu:
 if __name__ == '__main__':
     r = input('输入斗鱼直播间号：\n')
     s = DouYu(r)
+    print(s.get_real_url()['x-p2p'])
     print(s.get_real_url()['flv'])
