@@ -136,7 +136,7 @@ class DouYu:
         return real_url
 
     def get_real_url_pc(self):
-        error, key = self.get_pre()
+        error, _ = self.get_pre()
         if error == 0:
             pass
         elif error == 102:

@@ -33,7 +33,8 @@ def download_fail_handler(detail):
                       urllib.error.HTTPError,
                       jitter=backoff.random_jitter,
                       on_backoff=download_fail_handler,
-                      interval=config.download_retry_timeout
+                      interval=config.download_retry_timeout,
+                      max_tries=config.max_retries_for_download,
                       )
 @backoff.on_exception(backoff.constant,
                       RuntimeError,
@@ -64,6 +65,7 @@ def main():
     # room_id = input('Type room id then press Enter(douyu.com): \n')
     room_id = 520
     processed = False
+
     logging.info('Initialising task sequence...')
     dest = '../recordings/'
     filename = \
@@ -73,6 +75,11 @@ def main():
     filename_after = filename + '.mp4'
     try:
         resolve_and_download(room_id, filename_before, config.use_pc)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            logging.warning(
+                'Max retires exceeded, resolved source url invalid, changing platform...')
+            resolve_and_download(room_id, filename_before, not config.use_pc)
     except KeyboardInterrupt:
         logging.info('Download sequence completed... Starting ffmpeg for '
                      'transcode')
