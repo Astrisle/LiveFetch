@@ -43,7 +43,6 @@ def download_fail_handler(detail):
                       )
 def resolve_and_download(rid: str, filepath: str, use_pc):
     s = douyu.DouYu(rid)
-    # url = s.get_real_url()['flv']
     if use_pc:
         url = s.get_real_url_pc()
     else:
@@ -63,7 +62,7 @@ def resolve_and_download(rid: str, filepath: str, use_pc):
 
 def main():
     # room_id = input('Type room id then press Enter(douyu.com): \n')
-    room_id = 571881
+    room_id = 520
     processed = False
     logging.info('Initialising task sequence...')
     dest = '../recordings/'
