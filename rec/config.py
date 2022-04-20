@@ -8,4 +8,7 @@ auto_shutdown = False
 resolve_retry_timeout = 15
 
 # Retry timeout for download / 下载失败(多见于直播流尚未到达CDN导致源地址无效)重试等待时间
-download_retry_timeout = 0
+download_retry_timeout = 5
+
+# Use PC version to resolve source / 使用PC版接口解析直播流
+use_pc = False

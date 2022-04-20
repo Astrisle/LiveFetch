@@ -91,13 +91,7 @@ class DouYu:
 
         return key
 
-    def get_pc_js(self, cdn='ws-h5', rate=0):
-        """
-        通过PC网页端的接口获取完整直播源。
-        :param cdn: 主线路ws-h5、备用线路tct-h5
-        :param rate: 1流畅；2高清；3超清；4蓝光4M；0蓝光8M或10M
-        :return: JSON格式
-        """
+    def get_pc_js(self):
         res = self.s.get('https://www.douyu.com/' + str(self.rid)).text
         result = re.search(
             r'(vdwdae325w_64we[\s\S]*function ub98484234[\s\S]*?)function',
@@ -117,11 +111,12 @@ class DouYu:
         js = execjs.compile(func_sign)
         params = js.call('sign', self.rid, self.did, self.t10)
 
-        params += '&cdn={}&rate={}'.format(cdn, rate)
+        # params += '&cdn={}&rate={}&iar=0&ive=0'.format(cdn, rate)
         url = 'https://www.douyu.com/lapi/live/getH5Play/{}'.format(self.rid)
         res = self.s.post(url, params=params).json()
 
-        return res
+        url_res = res['data']['rtmp_url'] + '/' + res['data']['rtmp_live']
+        return url_res
 
     def get_real_url(self):
         error, key = self.get_pre()
@@ -134,15 +129,18 @@ class DouYu:
         else:
             key = self.get_js()
         real_url = {
-            'flv': 'http://dyscdnali1.douyucdn.cn/live/{}.flv?uuid='.format(
+            'flv': 'https://akm-tct.douyucdn.cn/live/{}.flv?uuid='.format(
                 key),
             'x-p2p': 'http://tx2play1.douyucdn.cn/live/{}.xs?uuid='.format(
                 key)}
         return real_url
 
-
-if __name__ == '__main__':
-    r = input('输入斗鱼直播间号：\n')
-    s = DouYu(r)
-    print(s.get_real_url()['x-p2p'])
-    print(s.get_real_url()['flv'])
+    def get_real_url_pc(self):
+        error, key = self.get_pre()
+        if error == 0:
+            pass
+        elif error == 102:
+            raise RuntimeError('房间不存在')
+        elif error == 104:
+            raise RuntimeError('房间未开播')
+        return self.get_pc_js()

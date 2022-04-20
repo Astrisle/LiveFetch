@@ -10,6 +10,6 @@ class TranscoderWrapper:
     def transcode(self):
         ff = FFmpeg(
             inputs={self.source: None},
-            outputs={self.dest: '-c:v copy -c:a copy'}
+            outputs={self.dest: '-c:v copy -c:a copy -flvflags add_keyframe_index'}
         )
         ff.run()
