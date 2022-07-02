@@ -86,9 +86,8 @@ class DouYu:
 
         url = 'https://m.douyu.com/api/room/ratestream'
         res = self.s.post(url, params=params).text
-        key = re.search(r'(\d{1,8}[0-9a-zA-Z]+)_?\d{0,4}(.m3u8|/playlist)',
+        key = re.search(r'(\d{1,8}[0-9a-zA-Z]+)_?\d{0,5}[a-zA-Z]?(.m3u8|/playlist)',
                         res).group(1)
-
         return key
 
     def get_pc_js(self):
@@ -112,7 +111,8 @@ class DouYu:
         params = js.call('sign', self.rid, self.did, self.t10)
 
         # params += '&cdn={}&rate={}&iar=0&ive=0'.format(cdn, rate)
-        url = 'https://www.douyu.com/lapi/live/getH5Play/{}'.format(self.rid)
+        url = 'https://playweb.douyu.com/lapi/live/getH5Play/{}'.format(
+            self.rid)
         res = self.s.post(url, params=params).json()
 
         url_res = res['data']['rtmp_url'] + '/' + res['data']['rtmp_live']

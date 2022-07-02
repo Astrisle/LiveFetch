@@ -1,4 +1,3 @@
-import time
 import urllib.error
 
 import backoff
@@ -42,7 +41,7 @@ def download_fail_handler(detail):
                       on_backoff=resolve_fail_handler,
                       interval=config.resolve_retry_timeout
                       )
-def resolve_and_download(rid: str, filepath: str, use_pc):
+def resolve_and_download(rid: str, filepath: str, use_pc: bool):
     s = douyu.DouYu(rid)
     if use_pc:
         url = s.get_real_url_pc()
@@ -61,27 +60,30 @@ def resolve_and_download(rid: str, filepath: str, use_pc):
         dm.download()
 
 
-def main():
+def main(use_pc: bool = True):
     # room_id = input('Type room id then press Enter(douyu.com): \n')
     room_id = 520
     processed = False
 
-    logging.info('Initialising task sequence...')
-    dest = '../recordings/'
+    logging.info('Initialising task sequence...USING: PC'
+                 if use_pc else 'Initialising task sequence...USING: Mobile')
+    dest = './recordings/'
     filename = \
         dest + datetime.datetime.now().strftime('%Y-%m-%d_%H-%M_') + 'DouYu_' \
         + str(room_id)
     filename_before = filename + '.flv'
     filename_after = filename + '.mp4'
     try:
-        resolve_and_download(room_id, filename_before, config.use_pc)
+        resolve_and_download(room_id, filename_before, use_pc)
     except urllib.error.HTTPError as e:
         if e.code == 404:
             logging.warning(
-                'Max retires exceeded, resolved source url invalid, changing platform...')
-            resolve_and_download(room_id, filename_before, not config.use_pc)
+                'Max retires exceeded, resolved source url not reachable, '
+                'changing platform...'
+            )
+            main(not use_pc)
     except KeyboardInterrupt:
-        logging.info('Download sequence completed... Starting ffmpeg for '
+        logging.info('Download sequence terminated... Starting ffmpeg for '
                      'transcode')
         me = transcoder.TranscoderWrapper(filename_before, filename_after)
         me.transcode()
@@ -106,4 +108,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(config.use_pc)
