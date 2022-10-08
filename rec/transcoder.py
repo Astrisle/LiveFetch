@@ -9,6 +9,7 @@ class TranscoderWrapper:
 
     def transcode(self):
         ff = FFmpeg(
+            global_options={'-hide_banner'},
             inputs={self.source: None},
             outputs={self.dest: '-c:v copy -c:a copy -flvflags add_keyframe_index'}
         )

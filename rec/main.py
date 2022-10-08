@@ -11,6 +11,8 @@ import os
 
 import logging
 
+from sys import exit
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -46,7 +48,7 @@ def resolve_and_download(rid: str, filepath: str, use_pc: bool):
     if use_pc:
         url = s.get_real_url_pc()
     else:
-        url = s.get_real_url()['flv']
+        url = s.get_real_url()
     logging.info('Current time - ' +
                  datetime.datetime.now().strftime('%H:%M:%S'))
     logging.info('Resolved stream source url: ' + url)
@@ -82,6 +84,7 @@ def main(use_pc: bool = True):
                 'changing platform...'
             )
             main(not use_pc)
+            exit()
     except KeyboardInterrupt:
         logging.info('Download sequence terminated... Starting ffmpeg for '
                      'transcode')
@@ -108,4 +111,7 @@ def main(use_pc: bool = True):
 
 
 if __name__ == '__main__':
+    # TODO - Take command line argument to dictate use PC or mobile api
+    # parser = argparse.ArgumentParser(description='DouYu Streaming Recorder')
+    # parser.add_argument('-p', '--use_pc', action='store_true')
     main(config.use_pc)

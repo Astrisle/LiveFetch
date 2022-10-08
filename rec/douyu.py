@@ -82,9 +82,14 @@ class DouYu:
 
         js = execjs.compile(func_sign)
         params = js.call('sign', self.rid, self.did, self.t10)
-        params += '&ver=219032101&rid={}&rate=-1'.format(self.rid)
+        params += '&ver=219032101&rid={}&rate=0'.format(self.rid)
 
         url = 'https://m.douyu.com/api/room/ratestream'
+        # res1 = self.s.post(url, params=params).json()
+        # url_end = res1['data']['url']
+        # url_ret = url_end.replace('m3u8', 'flv').replace('http', 'https')
+        # url_final = re.sub(r'_\d{0,5}[a-zA-Z]?.flv', '.flv', url_ret)
+        # return url_final
         res = self.s.post(url, params=params).text
         key = re.search(r'(\d{1,8}[0-9a-zA-Z]+)_?\d{0,5}[a-zA-Z]?(.m3u8|/playlist)',
                         res).group(1)
@@ -128,11 +133,7 @@ class DouYu:
             raise RuntimeError('房间未开播')
         else:
             key = self.get_js()
-        real_url = {
-            'flv': 'https://akm-tct.douyucdn.cn/live/{}.flv?uuid='.format(
-                key),
-            'x-p2p': 'http://tx2play1.douyucdn.cn/live/{}.xs?uuid='.format(
-                key)}
+        real_url = 'https://akm-tct.douyucdn.cn/live/{}.flv?uuid='.format(key)
         return real_url
 
     def get_real_url_pc(self):
