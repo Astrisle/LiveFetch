@@ -1,8 +1,8 @@
 # Room ID / 房间号
-rid = 5067522
+rid = 520
 
 # Recoding Duration / 录制时长
-duration = 10
+duration = 999999
 
 # Shutdown PC after recording & transcoding complete / 完成后自动关机
 auto_shutdown = False

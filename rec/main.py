@@ -79,7 +79,7 @@ def main(use_pc: bool = True):
         main(not use_pc)
         exit()
 
-    logging.info('Download sequence completed without issue.')
+    logging.info('Download/recording sequence completed.')
     if config.auto_shutdown:
         logging.warning(
             'SHUTTING DOWN IN 15 SECONDS PER SETTING, PRESS CTRL-C TO CANCEL')
