@@ -1,5 +1,8 @@
+# Room ID / 房间号
+rid = 5067522
+
 # Recoding Duration / 录制时长
-duration = 99999
+duration = 10
 
 # Shutdown PC after recording & transcoding complete / 完成后自动关机
 auto_shutdown = False
@@ -13,5 +16,5 @@ download_retry_timeout = 5
 # Max retires before using different platform api / 解析视频源地址失败重试次数
 max_retries_for_download = 30
 
-# Use browser lapi to resolve source / 使用PC版接口解析直播流
-use_pc = False
+# Use browser lapi to resolve source / 使用浏览器方面REST API解析直播流
+use_pc = True
