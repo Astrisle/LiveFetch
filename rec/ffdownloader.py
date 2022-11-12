@@ -9,7 +9,7 @@ class FFDownloaderWrapper:
         self.dest = dest
 
     def download(self):
-        ff = FFmpeg(global_options={'-hide_banner -loglevel warning'},
+        ff = FFmpeg(global_options={'-hide_banner -nostats'},
                     inputs={self.url: ['-t', str(config.duration)]},
                     outputs={self.dest: [
                         '-user_agent',

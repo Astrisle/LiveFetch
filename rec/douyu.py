@@ -11,10 +11,10 @@ import requests
 class DouYu:
     """
     可用来替换返回链接中的主机部分
-    两个阿里的CDN：
+    两个阿里的CDN:
     dyscdnali1.douyucdn.cn
     dyscdnali3.douyucdn.cn
-    墙外不用带尾巴的akm cdn：
+    墙外不用带尾巴的akm cdn:
     hls3-akm.douyucdn.cn
     hlsa-akm.douyucdn.cn
     hls1a-akm.douyucdn.cn

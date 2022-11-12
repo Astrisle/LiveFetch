@@ -4,6 +4,9 @@ rid = 520
 # Recoding Duration / 录制时长
 duration = 999999
 
+# File save parent directory / 文件保存路径
+savePath = '/Volumes/ext/recordings/'
+
 # Shutdown PC after recording & transcoding complete / 完成后自动关机
 auto_shutdown = False
 
